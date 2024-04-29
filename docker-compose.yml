@@ -1,0 +1,42 @@
+version: '3'
+
+services:
+  mongodb:
+    image: mongo:latest
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb_data:/data/db
+
+  redis:
+    image: redis:latest
+    ports:
+      - "6379:6379"
+
+  # app:
+  #   build:
+  #     context: .
+  #     dockerfile: Dockerfile
+  #   ports:
+  #     - "8080:8080"
+  #   depends_on:
+  #     - mongodb
+  #     - redis
+  #   volumes:
+  #     - ./url_shortener:/app
+  #   command: ["./url_shortener"]
+
+  mongo-express:
+    image: mongo-express:latest
+    ports:
+      - "8081:8081"  # Map port 8081 on the host to port 8081 in the container
+    environment:
+      - ME_CONFIG_MONGODB_SERVER=mongodb
+      - ME_CONFIG_MONGODB_PORT=27017
+      - ME_CONFIG_OPTIONS_EDITORTHEME=ambiance
+      - ME_CONFIG_BASICAUTH_USERNAME=myuser
+      - ME_CONFIG_BASICAUTH_PASSWORD=mypassword
+
+volumes:
+  mongodb_data:
+
