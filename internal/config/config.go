@@ -22,8 +22,8 @@ func NewConfig() *AppConfig {
 	return &AppConfig{
 		mongoCollectionName: "Url_shortener_collection",
 		mongoDatabaseName:   "Url_shortener",
-		mongoAddress:        "mongodb://localhost:27017",
-		redisAddress:        "redis://localhost:6379",
+		mongoAddress:        "mongodb://mongodb:27017",
+		redisAddress:        "redis://redis:6379",
 		redisPassword:       "",
 		redisDB:             0,
 	}
