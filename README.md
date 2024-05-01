@@ -1,6 +1,6 @@
 # url-shortener
 
-A Go and Gin-based URL shortener application designed to provide users with a convenient way to shorten long URLs into shorter, more manageable links. The application follows the principles of hexagonal architecture pattern to ensure modularity, flexibility, and maintainability.
+A Go and Gin-based URL shortener application designed to provide users with a convenient way to shorten long URLs into shorter, more manageable links. The application follows the principles of **hexagonal architecture** pattern to ensure modularity, flexibility, and maintainability.
 
 ## Functional Requirements
 
@@ -42,7 +42,7 @@ A Go and Gin-based URL shortener application designed to provide users with a co
    go build -o url_shortener ./cmd/url_shortener
    ```
 
-3. **Run Docker-compose**:
+3. **Run Docker-compose**: Docker compose will build and start golang app, MongoDB and Redis
    ```bash
    docker-compose up -d
    ```
