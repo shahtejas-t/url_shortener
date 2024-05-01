@@ -13,18 +13,18 @@ services:
     ports:
       - "6379:6379"
 
-  # app:
-  #   build:
-  #     context: .
-  #     dockerfile: Dockerfile
-  #   ports:
-  #     - "8080:8080"
-  #   depends_on:
-  #     - mongodb
-  #     - redis
-  #   volumes:
-  #     - ./url_shortener:/app
-  #   command: ["./url_shortener"]
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    depends_on:
+      - mongodb
+      - redis
+    volumes:
+      - ./url_shortener:/opt/app
+    command: ["./url_shortener"]
 
   mongo-express:
     image: mongo-express:latest
