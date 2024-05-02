@@ -70,6 +70,17 @@ func (r *LinkRepository) Get(ctx context.Context, id string) (domain.Link, error
 	return link, nil
 }
 
+func (r *LinkRepository) FindOriginal(ctx context.Context, originalLink string) (domain.Link, error) {
+	var link domain.Link
+
+	err := r.collection.FindOne(ctx, bson.M{"original_url": originalLink}).Decode(&link)
+	if err != nil {
+		return domain.Link{}, fmt.Errorf("failed to find document For Original link %s: %w", originalLink, err)
+	}
+
+	return link, nil
+}
+
 func (r *LinkRepository) Create(ctx context.Context, link domain.Link) error {
 	_, err := r.collection.InsertOne(ctx, link)
 	if err != nil {
