@@ -54,7 +54,7 @@ func (h *GenerateLinkFunctionHandler) CreateShortLink(c *gin.Context) {
 		CreatedAt:   time.Now(),
 	}
 
-	err = h.linkService.Create(ctx, link)
+	link, err = h.linkService.Create(ctx, link)
 	if err != nil {
 		ServerError(c.Writer, err)
 		return

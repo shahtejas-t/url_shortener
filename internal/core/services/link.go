@@ -34,14 +34,19 @@ func (service *LinkService) GetOriginalURL(ctx context.Context, shortLinkKey str
 	return &data.OriginalURL, nil
 }
 
-func (service *LinkService) Create(ctx context.Context, link domain.Link) error {
+func (service *LinkService) Create(ctx context.Context, link domain.Link) (domain.Link, error) {
 	// if err := service.cache.Set(ctx, link.Id, link.OriginalURL); err != nil {
 	// 	return fmt.Errorf("failed to set short URL for identifier '%s': %w", link.Id, err)
 	// }
-	if err := service.port.Create(ctx, link); err != nil {
-		return fmt.Errorf("failed to create short URL: %w", err)
+	data, err := service.port.FindOriginal(ctx, link.OriginalURL)
+	if err != nil {
+		if err = service.port.Create(ctx, link); err != nil {
+			var zeroLink domain.Link
+			return zeroLink, fmt.Errorf("failed to create short URL: %w", err)
+		}
+		return link, nil
 	}
-	return nil
+	return data, nil
 }
 
 func (service *LinkService) Delete(ctx context.Context, short string) error {
