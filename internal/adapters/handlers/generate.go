@@ -18,11 +18,12 @@ type RequestBody struct {
 }
 
 type GenerateLinkFunctionHandler struct {
-	linkService *services.LinkService
+	linkService   *services.LinkService
+	metricService *services.MetricService
 }
 
-func NewGenerateLinkFunctionHandler(l *services.LinkService) *GenerateLinkFunctionHandler {
-	return &GenerateLinkFunctionHandler{linkService: l}
+func NewGenerateLinkFunctionHandler(l *services.LinkService, m *services.MetricService) *GenerateLinkFunctionHandler {
+	return &GenerateLinkFunctionHandler{linkService: l, metricService: m}
 }
 
 func (h *GenerateLinkFunctionHandler) CreateShortLink(c *gin.Context) {
@@ -51,16 +52,27 @@ func (h *GenerateLinkFunctionHandler) CreateShortLink(c *gin.Context) {
 	link := domain.Link{
 		Id:          GenerateShortURLID(8),
 		OriginalURL: requestBody.Long,
-		CreatedAt:   time.Now(),
 	}
 
-	err = h.linkService.Create(ctx, link)
+	link, err = h.linkService.Create(ctx, link)
 	if err != nil {
 		ServerError(c.Writer, err)
 		return
 	}
 
 	js, err := json.Marshal(link)
+	if err != nil {
+		ServerError(c.Writer, err)
+		return
+	}
+
+	metric := domain.Metric{
+		ShortLink:   link.Id,
+		OriginalURL: link.OriginalURL,
+		CreatedAt:   time.Now(),
+	}
+
+	err = h.metricService.Create(ctx, metric)
 	if err != nil {
 		ServerError(c.Writer, err)
 		return
