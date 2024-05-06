@@ -8,11 +8,12 @@ import (
 )
 
 type DeleteFunctionHandler struct {
-	linkService *services.LinkService
+	linkService   *services.LinkService
+	metricService *services.MetricService
 }
 
-func NewDeleteFunctionHandler(l *services.LinkService) *DeleteFunctionHandler {
-	return &DeleteFunctionHandler{linkService: l}
+func NewDeleteFunctionHandler(l *services.LinkService, m *services.MetricService) *DeleteFunctionHandler {
+	return &DeleteFunctionHandler{linkService: l, metricService: m}
 }
 
 func (s *DeleteFunctionHandler) Delete(c *gin.Context) {
@@ -23,6 +24,10 @@ func (s *DeleteFunctionHandler) Delete(c *gin.Context) {
 		http.Error(c.Writer, "Internal Server Error", http.StatusInternalServerError)
 		return
 	}
-
+	err = s.metricService.Delete(ctx, id)
+	if err != nil {
+		http.Error(c.Writer, "Internal Server Error", http.StatusInternalServerError)
+		return
+	}
 	c.Writer.WriteHeader(http.StatusNoContent)
 }
