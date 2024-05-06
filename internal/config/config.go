@@ -10,22 +10,24 @@ import (
 )
 
 type AppConfig struct {
-	mongoCollectionName string
-	mongoDatabaseName   string
-	mongoAddress        string
-	redisAddress        string
-	redisPassword       string
-	redisDB             int
+	linkCollectionName   string
+	metricCollectionName string
+	mongoDatabaseName    string
+	mongoAddress         string
+	redisAddress         string
+	redisPassword        string
+	redisDB              int
 }
 
 func NewConfig() *AppConfig {
 	return &AppConfig{
-		mongoCollectionName: "Url_shortener_collection",
-		mongoDatabaseName:   "Url_shortener",
-		mongoAddress:        "mongodb://mongodb:27017",
-		redisAddress:        "redis://redis:6379",
-		redisPassword:       "",
-		redisDB:             0,
+		linkCollectionName:   "link",
+		metricCollectionName: "metric",
+		mongoDatabaseName:    "Url_Shortener",
+		mongoAddress:         "mongodb://mongodb:27017",
+		redisAddress:         "redis://redis:6379",
+		redisPassword:        "",
+		redisDB:              0,
 	}
 }
 
@@ -36,26 +38,27 @@ func init() {
 	}
 }
 
-func (c *AppConfig) GetMongoParams() (string, string, string) {
+func (c *AppConfig) GetMongoParams() (string, string, string, string) {
 	mongoAddress, addrOk := os.LookupEnv("mongoAddress")
-	collectionName, collectionOk := os.LookupEnv("mongoCollectionName")
+	linkCollectionName, linkCollectionOk := os.LookupEnv("linkCollectionName")
+	metricCollectionName, metricCollectionOk := os.LookupEnv("metricCollectionName")
 	dbName, dbOk := os.LookupEnv("mongoDatabaseName")
 
 	if !addrOk {
 		fmt.Println("Need mongoAddress environment variable")
-		return c.mongoAddress, c.mongoDatabaseName, c.mongoCollectionName
+		return c.mongoAddress, c.mongoDatabaseName, c.linkCollectionName, c.metricCollectionName
 	}
 
 	if !dbOk {
 		fmt.Println("Need mongodb db environment variable")
-		return mongoAddress, c.mongoDatabaseName, c.mongoCollectionName
+		return mongoAddress, c.mongoDatabaseName, c.linkCollectionName, c.metricCollectionName
 	}
 
-	if !collectionOk {
+	if !linkCollectionOk || !metricCollectionOk {
 		fmt.Println("Need mongodb collection environment variable")
-		return mongoAddress, dbName, c.mongoCollectionName
+		return mongoAddress, dbName, c.linkCollectionName, c.metricCollectionName
 	}
-	return mongoAddress, dbName, collectionName
+	return mongoAddress, dbName, linkCollectionName, metricCollectionName
 }
 
 func (c *AppConfig) GetRedisParams() (string, string, int) {
