@@ -23,7 +23,7 @@ func NewConfig() *AppConfig {
 	return &AppConfig{
 		linkCollectionName:   "link",
 		metricCollectionName: "metric",
-		mongoDatabaseName:    "Url_Shortener",
+		mongoDatabaseName:    "Url_shortener",
 		mongoAddress:         "mongodb://mongodb:27017",
 		redisAddress:         "redis://redis:6379",
 		redisPassword:        "",
